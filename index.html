@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShareMB - Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, #d4fcd6, #f9ffcc);
+      margin: 0;
+      padding: 0;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .card {
+      display: none;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      margin-top: 60px;
+    }
+    .active {
+      display: block;
+    }
+    input, select {
+      width: 90%;
+      padding: 12px;
+      margin: 8px auto;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #28a745;
+      color: white;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .back-btn {
+      margin-top: 20px;
+      background-color: #6c757d;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 -1px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+    .bottom-nav button {
+      background: none;
+      color: #2c3e50;
+      font-size: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .bottom-nav button span {
+      font-size: 12px;
+    }
+    ul li {
+      margin: 10px 0;
+      font-size: 16px;
+      list-style: none;
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    ul li button {
+      width: 100%;
+      text-align: left;
+      background-color: #f2f2f2;
+      color: #2c3e50;
+    }
+    #reader {
+      width: 100%;
+      margin: auto;
+      max-width: 400px;
+    }
+    .scan-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    #qrCode {
+      margin: 20px auto;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card active" id="home">
+    <h2>🏠 Welcome to ShareMB</h2>
+    <ul>
+      <li><button onclick="showSection('settings')">⚙️ App Settings</button></li>
+      <li><button onclick="showSection('scanPay')"><img src="https://cdn-icons-png.flaticon.com/512/10539/10539974.png" class="scan-icon">Scan & Pay</button></li>
+      <li><button onclick="showSection('game')">🎮 Tap & Earn</button></li>
+      <li><button onclick="showSection('moreGames')">🕹️ More Games</button></li>
+      <li><button onclick="showSection('history')">📜 Transaction History</button></li>
+      <li><button onclick="showSection('sendMB')">🔁 Send/Receive MB</button></li>
+      <li><button onclick="showSection('recharge')">📱 Recharge</button></li>
+      <li><button onclick="showSection('profile')">👤 Profile</button></li>
+      <li><button onclick="showSection('adminPanel')">🛠️ Admin Panel</button></li>
+    </ul>
+  </div>
+
+  <div class="card" id="game">
+    <h2>🎮 Tap & Earn Game</h2>
+    <p>Tap the button to earn points. Earn 2 coins for every 100 points!</p>
+    <button onclick="earnPoints()">Tap Tap!</button>
+    <p id="pointsDisplay">Points: 0 | Coins: 0</p>
+    <button class="back-btn" onclick="showSection('home')">🔙 Back</button>
+  </div>
+
+  <div class="card" id="moreGames">
+    <h2>🕹️ More Games</h2>
+    <ul>
+      <li><button onclick="alert('Coming soon: Puzzle Game')">🧩 Puzzle Game</button></li>
+      <li><button onclick="alert('Coming soon: Trivia Quiz')">❓ Trivia Quiz</button></li>
+      <li><button onclick="alert('Coming soon: Memory Match')">🧠 Memory Match</button></li>
+      <li><button onclick="alert('Coming soon: Runner Game')">🏃‍♂️ Endless Runner</button></li>
+      <li><button onclick="alert('Coming soon: Balloon Popper')">🎈 Balloon Popper</button></li>
+    </ul>
+    <button class="back-btn" onclick="showSection('home')">🔙 Back</button>
+  </div>
+
+  <div class="card" id="scanPay">
+    <h2>📷 Scan & Pay</h2>
+    <div id="reader"></div>
+    <input type="number" id="sendAmount" placeholder="Enter MB to Send">
+    <button onclick="confirmSend()">✅ Send</button>
+    <button class="back-btn" onclick="showSection('home')">🔙 Back</button>
+  </div>
+
+  <div class="card" id="profile">
+    <h2>👤 Your QR Code</h2>
+    <div id="qrCode"></div>
+    <button class="back-btn" onclick="showSection('home')">🔙 Back</button>
+  </div>
+
+  <div class="card" id="settings">
+    <h2>⚙️ App Settings</h2>
+    <ul>
+      <li><button onclick="alert('Change Password functionality coming soon')">🔒 Change Password</button></li>
+      <li><button onclick="alert('Language Preferences will be added')">🌐 Language Preferences</button></li>
+      <li><button onclick="alert('Notification settings coming soon')">🔔 Notification Settings</button></li>
+      <li><button onclick="alert('Privacy Policy page will be shown')">📄 Privacy Policy</button></li>
+      <li><button onclick="alert('Terms and Conditions page will be shown')">📜 Terms & Conditions</button></li>
+      <li><button onclick="alert('Support will be available soon')">❓ Help & Support</button></li>
+    </ul>
+    <button class="back-btn" onclick="showSection('home')">🔙 Back</button>
+  </div>
+
+  <script>
+    let points = 0;
+    let coins = 0;
+    let userId = "user_" + Math.floor(Math.random() * 100000);
+
+    function showSection(id) {
+      document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function earnPoints() {
+      points += 10;
+      if (points >= 100) {
+        coins += 2;
+        points -= 100;
+      }
+      document.getElementById("pointsDisplay").textContent = `Points: ${points} | Coins: ${coins}`;
+    }
+
+    function generateQRCode() {
+      const qrDiv = document.getElementById("qrCode");
+      qrDiv.innerHTML = "";
+      QRCode.toCanvas(qrDiv, userId);
+    }
+
+    function confirmSend() {
+      const amount = document.getElementById("sendAmount").value;
+      alert(`Sent ${amount}MB to scanned user!`);
+    }
+
+    function setupScanner() {
+      const scanner = new Html5Qrcode("reader");
+      scanner.start({ facingMode: "environment" }, {
+        fps: 10,
+        qrbox: 250
+      }, (decodedText) => {
+        alert("Scanned User ID: " + decodedText);
+        scanner.stop();
+      }, (error) => {
+        console.warn(error);
+      });
+    }
+
+    window.onload = () => {
+      generateQRCode();
+      setupScanner();
+    }
+  </script>
+</body>
+</html>
